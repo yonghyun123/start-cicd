@@ -7,6 +7,7 @@ import hellocicd.web.dto.PostsResponseDto;
 import hellocicd.web.dto.PostsSaveRequestDto;
 import hellocicd.web.dto.PostsUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-@Transactional
+@Slf4j
 public class PostsService {
     private final PostsRepository postsRepository;
 
@@ -33,6 +34,7 @@ public class PostsService {
         return id;
     }
 
+    @Transactional(readOnly = true)
     public PostsResponseDto findById(Long id) {
         Posts entity = postsRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id = " + id));
@@ -45,4 +47,14 @@ public class PostsService {
                 .map(v -> new PostsListResponseDto(v))
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void delete(Long id) {
+        Posts posts = postsRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다 id = " + id));
+
+        log.info(posts.toString());
+        postsRepository.delete(posts);
+    }
+
 }
