@@ -1,9 +1,11 @@
 package hellocicd.config.auth.dto;
 
 import hellocicd.domain.user.User;
+import lombok.Getter;
 
 import java.io.Serializable;
 
+@Getter
 public class SessionUser implements Serializable {
     private String name;
     private String email;
